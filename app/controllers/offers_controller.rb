@@ -1,7 +1,5 @@
 class OffersController < ApplicationController
-  authorize_resource
   before_action :set_offer, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, except: [:show]
 
   # GET /offers
   # GET /offers.json
@@ -17,8 +15,6 @@ class OffersController < ApplicationController
   # GET /offers/new
   def new
     @offer = Offer.new
-    @offer_details = @offer.offer_details.build
-    render :new, locals: {offer_details: @offer_details}
   end
 
   # GET /offers/1/edit
@@ -29,10 +25,10 @@ class OffersController < ApplicationController
   # POST /offers.json
   def create
     @offer = Offer.new(offer_params)
-    @offer.date_creation = Time.now
+
     respond_to do |format|
       if @offer.save
-        format.html { redirect_to @offer, notice: 'La oferta fue creada satifactoriamente.' }
+        format.html { redirect_to @offer, notice: 'Offer was successfully created.' }
         format.json { render :show, status: :created, location: @offer }
       else
         format.html { render :new }
@@ -66,18 +62,13 @@ class OffersController < ApplicationController
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_offer
+      @offer = Offer.find(params[:id])
+    end
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_offer
-    @offer = Offer.find(params[:id])
-  end
-
-  # Only allow a list of trusted parameters through.
-  def offer_params
-    params.require(:offer).permit(:description, :date_start, :date_end, :date_creation, :estate_id, offer_details_attributes: [:id, :offer_id, :room_id, :discount])
-  end
-
-  def current_ability
-    @current_ability ||= OfferAbility.new(current_user)
-  end
+    # Only allow a list of trusted parameters through.
+    def offer_params
+      params.fetch(:offer, {})
+    end
 end
