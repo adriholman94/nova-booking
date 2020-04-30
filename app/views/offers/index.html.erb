@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<div class="content-heading">
+  <div>Ofertas de mis propiedades</div>
+
+  <div class="ml-auto">
+    <%= link_to new_offer_path do %>
+      <button class="btn btn btn-info" title="Nueva oferta">
+        <i class="fas fa-plus text-light fa-1x"></i>
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<section class="container">
+  <div class="row">
+    <div class="filter-section">
+      <%= render partial: "offers/filter", :locals => {filterrific: filterrific} %>
+    </div>
+    <div class="col" id="filterrific_results">
+      <%= render partial: "offers/list", :locals => {offers: offers} %>
+    </div>
+  </div>
+</section>
