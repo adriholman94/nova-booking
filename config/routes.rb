@@ -6,7 +6,6 @@ Rails.application.routes.draw do
 
   get 'welcome/index'
   get 'welcome/results'
-  get 'welcome/resources'
 
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
@@ -27,7 +26,6 @@ Rails.application.routes.draw do
     end
   end
 
-  delete 'estates/:id/remove_image', to: 'estates#remove_image', :as => 'remove_image_estate'
   get 'rooms/:id', to: 'estates#room', :as => 'room_estate'
   get 'estates/:id/show_detail', :to => 'estates#show_detail', :as => 'show_detail_estate'
   get 'estates/:id/show_visited', :to => 'estates#show_visited', :as => 'show_visited_estate'
@@ -55,5 +53,10 @@ Rails.application.routes.draw do
 
   # api routes
   get '/api/i18n/:locale' => 'api#i18n'
+
+  # error routes
+  get '404', to: 'errors#page_not_found'
+  get '422', to: 'errors#server_error'
+  get '500', to: 'errors#server_error'
 
 end
