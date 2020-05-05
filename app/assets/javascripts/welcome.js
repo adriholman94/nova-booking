@@ -46,8 +46,8 @@ $(function () {
     }
     $("#with_search_home").easyAutocomplete(options_easy);
     $("#with_search_results").easyAutocomplete(options_easy);
-    let fromD;
-    let toD;
+    let fromD = $("#with_date_gte").val();
+    let toD = $("#with_date_lte").val();
     let startDate;
     let endDate;
     let newStartDate = dateManipulation(new Date(), 1, 0, 0, "+");
@@ -63,10 +63,6 @@ $(function () {
         format: "dd MM yyyy",
         language: 'es',
         todayHighlight: true
-    }).on('changeDate', function (selected) {
-        newStartDate = new Date(selected.date.valueOf());
-        let date = dateManipulation(newStartDate, 1, 0, 0, "+");
-        $("#with_date_lte").datepicker('setStartDate', date);
     });
     $("#with_date_lte").datepicker({
         weekStart: 1,
@@ -77,26 +73,19 @@ $(function () {
         format: "dd MM yyyy",
         language: 'es',
         todayHighlight: true
-    }).on('changeDate', function (selected) {
-        newEndDate = new Date(selected.date.valueOf());
+    });
+    $("#with_date_gte").datepicker().on('changeDate', function (selected) {
+        fromD = selected.date;
+        console.log("from " + fromD);
+        newStartDate = fromD;
+        let date = dateManipulation(newStartDate, 1, 0, 0, "+");
+        $("#with_date_lte").datepicker('setStartDate', date);
+    });
+    $("#with_date_lte").datepicker().on('changeDate', function (selected) {
+        toD = selected.date;
+        console.log("to " + toD);
+        newEndDate = toD;
         let date = dateManipulation(newEndDate, 1, 0, 0, "-");
         $("#with_date_gte").datepicker('setEndDate', date);
     });
-
-    if ($("#with_date_gte").val() != '') {
-        fromD = $("#with_date_gte").val(); console.log(fromD);
-        startDate = stringToDate(fromD, "yyyy-mm-dd", "-");
-        newStartDate = dateManipulation(startDate, 1, 0, 0, "+");
-        $("#with_date_gte").datepicker('setDate', startDate);
-        $("#with_date_lte").datepicker('setStartDate', newStartDate);
-    }
-    if ($("#with_date_lte").val() != '') {
-        toD = $("#with_date_lte").val(); console.log(toD);
-        endDate = stringToDate(toD, "yyyy-mm-dd", "-");
-        newEndDate = dateManipulation(endDate, 1, 0, 0, "-");
-        $("#with_date_lte").datepicker('setDate', endDate);
-        $("#with_date_gte").datepicker('setEndDate', newEndDate);
-    }
-
-
-});
+});   
